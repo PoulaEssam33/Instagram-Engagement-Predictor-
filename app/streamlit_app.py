@@ -1,3 +1,4 @@
+import base64
 import json
 from datetime import date, timedelta
 from pathlib import Path
@@ -16,35 +17,44 @@ st.set_page_config(
 ROOT_DIR = Path(__file__).resolve().parents[1]
 MODEL_PATH = ROOT_DIR / "models" / "model.npz"
 META_PATH = ROOT_DIR / "models" / "model_meta.json"
+TEAM_IMAGE_DIR = ROOT_DIR / "assets" / "team"
 
 # Team profiles shown in the final About section.
-# Images are resolved from the public LinkedIn profile slugs through Unavatar.
+# Photos are stored locally so the deployed app does not depend on external avatar services.
 TEAM_MEMBERS = [
     {
         "name": "Youssef Mazher",
-        "image": "https://unavatar.io/linkedin/user:youssef-mazher?size=500&fallback=false",
+        "image": TEAM_IMAGE_DIR / "youssef-mazher.jpg",
         "linkedin": "https://www.linkedin.com/in/youssef-mazher/?isSelfProfile=false",
         "github": "https://github.com/youssef-mazher",
     },
     {
         "name": "Youssef Zizo",
-        "image": "https://unavatar.io/linkedin/user:youssef-zizo-80034a359?size=500&fallback=false",
+        "image": TEAM_IMAGE_DIR / "youssef-zizo.jpg",
         "linkedin": "https://www.linkedin.com/in/youssef-zizo-80034a359/?isSelfProfile=false",
         "github": "",
     },
     {
         "name": "Hashim Elhelo",
-        "image": "https://unavatar.io/linkedin/user:hashim-elhelo-034a5b177?size=500&fallback=false",
+        "image": TEAM_IMAGE_DIR / "hashim-elhelo.jpg",
         "linkedin": "https://www.linkedin.com/in/hashim-elhelo-034a5b177/?isSelfProfile=false",
         "github": "https://github.com/hashemelhelo2827",
     },
     {
         "name": "Poula Essam",
-        "image": "https://unavatar.io/linkedin/user:poula-essam-257279314?size=500&fallback=false",
+        "image": TEAM_IMAGE_DIR / "poula-essam.jpg",
         "linkedin": "https://www.linkedin.com/in/poula-essam-257279314/?isSelfProfile=true",
         "github": "https://github.com/PoulaEssam33",
     },
 ]
+
+
+def image_to_data_uri(path):
+    path = Path(path)
+    if not path.exists():
+        return ""
+    encoded = base64.b64encode(path.read_bytes()).decode("ascii")
+    return f"data:image/jpeg;base64,{encoded}"
 
 
 @st.cache_resource
@@ -2047,7 +2057,8 @@ st.markdown(
 # Final About / Team section
 team_cards = []
 for member in TEAM_MEMBERS:
-    image_url = member.get("image", "")
+    image_source = member.get("image", "")
+    image_url = image_to_data_uri(image_source) if image_source else ""
     name = member.get("name", "Team member")
     linkedin = member.get("linkedin", "")
     github = member.get("github", "")
@@ -2095,7 +2106,6 @@ st.markdown(
         <div>
             <div class="footer-title">Instagram Engagement Predictor</div>
             <div class="footer-copy">Target: raw engagement — likes + comments, with shares and saves where those fields are available in the source data.</div>
-            <a class="avatar-credit" href="https://unavatar.io" target="_blank">Avatars provided by Unavatar</a>
         </div>
         <div class="footer-meta">ML PROJECT / STREAMLIT DEMO<br>DESIGNED AS AN EDITORIAL DATA PRODUCT</div>
     </footer>
