@@ -30,9 +30,9 @@ TEAM_MEMBERS = [
     },
     {
         "name": "Youssef Zizo",
-        "image": TEAM_IMAGE_DIR / "youssef-zizo.jpg",
+        "image": "https://github.com/youssefzizo757-yz.png?size=500",
         "linkedin": "https://www.linkedin.com/in/youssef-zizo-80034a359/?isSelfProfile=false",
-        "github": "",
+        "github": "https://github.com/youssefzizo757-yz",
     },
     {
         "name": "Hashim Elhelo",
@@ -50,6 +50,8 @@ TEAM_MEMBERS = [
 
 
 def image_to_data_uri(path):
+    if isinstance(path, str) and path.startswith(("http://", "https://")):
+        return path
     path = Path(path)
     if not path.exists():
         return ""
