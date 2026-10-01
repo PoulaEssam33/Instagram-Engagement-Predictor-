@@ -30,7 +30,7 @@ TEAM_MEMBERS = [
     },
     {
         "name": "Youssef Zizo",
-        "image": "https://github.com/youssefzizo757-yz.png?size=500",
+        "image": TEAM_IMAGE_DIR / "youssef-zizo.jpg",
         "linkedin": "https://www.linkedin.com/in/youssef-zizo-80034a359/?isSelfProfile=false",
         "github": "https://github.com/youssefzizo757-yz",
     },
